@@ -2,7 +2,7 @@
   "name": "duelr",
   "version": "1.0.0",
   "description": "An online 2D multiplayer fighting game.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
