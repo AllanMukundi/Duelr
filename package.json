@@ -1,0 +1,31 @@
+{
+  "name": "duelr",
+  "version": "1.0.0",
+  "description": "An online 2D multiplayer fighting game.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AllanMukundi/Duelr.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "Node.js",
+    "Express.js",
+    "Socket.io",
+    "Multiplayer",
+    "Game"
+  ],
+  "author": "Allan Mukundi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AllanMukundi/Duelr/issues"
+  },
+  "homepage": "https://github.com/AllanMukundi/Duelr#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "socket.io": "^2.0.3"
+  }
+}
