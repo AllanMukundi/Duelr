@@ -7,7 +7,7 @@ var express     =       require('express');
 var app         =       express();
 var server      =       require('http').Server(app);
 var io          =       require('socket.io')(server);
-var CONST       =       require('./constants.js');
+var CONST       =       require('./game/constants.js');
 var Manager     =       require('./game/manager.js');
 var Game        =       require('./game/game.js');
 var Player      =       require('./game/player.js');
@@ -40,7 +40,7 @@ function newGameCode() {
   for(var i = 0; i < CONST.GAME_CODE_LEN; ++i) {
     code += choices.charAt(randRange(0, 26));
   }
-  while Manager.gameExists(code) {
+  while (Manager.gameExists(code)) {
     code = newGameCode();
   }
   console.log("Game code %d created.", code)
@@ -49,22 +49,40 @@ function newGameCode() {
 
 // Player connection
 io.on('connection', function(socket) {
-  socket.player = playerNum++;
+  socket.id = playerNum++;
 
   // Player One creates a new game
   socket.on('createGame', function(data) {
     var gameCode = newGameCode();
-    var player = new Player(gameCode, data.name, socket.player, socket, 'Left');
+    var player = new Player(gameCode, data.name, socket.id, socket, 'Left');
     var game = new Game(gameCode);
+    socket.player = player;
     game.setPlayerOne(player);
     Manager.games[gameCode] = gameCode;
-  })
+  });
 
-  socket.emit('playerid', { id: socket.player });
-  console.log('Player ' + socket.player + ' has connected.');
+  // Player Two joins a game
+  socket.on('joinGame', function(data) {
+    var gameCode = Manager[data.gameCode];
+    if (gameCode == null) {
+      socket.emit('gameJoin', {game: null});
+      console.log('Invalid game code.');
+    } else {
+      var player = new Player(gameCode, data.name, socket.id, socket, 'Right');
+      game.setPlayerTwo(player);
+      socket.player = player;
+      socket.emit('gameJoin', {game: 'valid'});
+      var opponent = Game.playerOne.socket;
+      opponent.emit('gameJoin', {game: 'valid'});
+    }
+  });
 
+  socket.emit('playerid', { id: socket.id });
+  console.log('Player ' + socket.id + ' has connected.');
+
+  // Disconnects a player
   socket.on('disconnect', function() {
-    console.log('Player ' + socket.player + ' has disconnected.');
+    console.log('Player ' + socket.id + ' has disconnected.');
     --playerNum
   });
 })

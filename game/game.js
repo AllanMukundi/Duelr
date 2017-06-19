@@ -1,6 +1,6 @@
 'use strict'
 
-class Game() {
+class Game {
   constructor(gameCode) {
     console.log("Game created.");
     this.gameCode = gameCode;
