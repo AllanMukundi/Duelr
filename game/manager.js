@@ -2,7 +2,7 @@
 
 class Manager {
   constructor() {
-    console.log("Game started.");
+    console.log("Game manager started.");
     this.games = {};
     this.running = true;
   };
