@@ -1,0 +1,58 @@
+/*
+==========================
+Universal
+==========================
+*/
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+* {
+  font-family: sans-serif;
+  font-family: "Racing Sans One", cursive;
+}
+
+/*
+==========================
+Home screen
+==========================
+*/
+
+body {
+  background-image: url("assets/background.png");
+  background-repeat: repeat;
+}
+
+.logo {
+  color: #000;
+}
+
+.centre-v {
+  min-height: 90%;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+}
+
+.home-box {
+  border: 1px solid red;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 750px;
+  height: 750px;
+}
+
+#btn-home {
+  font-size: 4.5rem;
+  height: 75px;
+  width: 450px;
+}
+
+.btn-create {
+  margin-bottom: 25px;
+}
