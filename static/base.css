@@ -83,10 +83,6 @@ body {
   background-repeat: repeat;
 }
 
-.logo {
-  color: #000;
-}
-
 .centre-v {
   min-height: 90%;
   min-height: 90vh;
@@ -103,7 +99,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 750px;
-  height: 750px;
+  height: 800px;
 }
 
 button::-moz-focus-inner {
@@ -136,7 +132,9 @@ button::-moz-focus-inner {
   color: #fff;
 }
 
-#btn-home {
+.btn-home,
+.name-box,
+.code-box {
   font-size: 3.5rem;
   height: 80px;
   width: 450px;
@@ -146,7 +144,34 @@ button::-moz-focus-inner {
 	margin-top: 90px;
 }
 
-.btn-create {
-	margin-top: 60px;
-  margin-bottom: 25px;
+.btn-enter,
+.btn-create,
+.name-box,
+.code-box {
+	margin-bottom: 25px;
+}
+
+.btn-create,
+.name-box,
+.code-box {
+	margin-top: 30px;
+}
+
+.code-box {
+	background: #808080;
+  display: flex;
+  align-items: center;
+}
+
+#code,
+.code-help {
+	font-family: "Racing Sans One", cursive;
+  color: #fff;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.code-help {
+	color: #fff;
+	font-size: 2rem;
 }

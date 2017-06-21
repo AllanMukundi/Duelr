@@ -8,9 +8,10 @@ var app         =       express();
 var server      =       require('http').Server(app);
 var io          =       require('socket.io')(server);
 var CONST       =       require('./game/constants.js');
-var Manager     =       require('./game/manager.js');
+var gameManager =       require('./game/manager.js');
 var Game        =       require('./game/game.js');
 var Player      =       require('./game/player.js');
+var Manager     =       new gameManager();
 var playerNum   =       0
 
 // Start the server
@@ -43,10 +44,9 @@ function newGameCode() {
   while (Manager.gameExists(code)) {
     code = newGameCode();
   }
-  console.log("Game code %d created.", code)
+  console.log("Game code: " + code);
   return code;
 }
-
 // Player connection
 io.on('connection', function(socket) {
   socket.id = playerNum++;
@@ -59,6 +59,7 @@ io.on('connection', function(socket) {
     socket.player = player;
     game.setPlayerOne(player);
     Manager.games[gameCode] = gameCode;
+    socket.emit('createGameCode', {gameCode: gameCode})
   });
 
   // Player Two joins a game
@@ -83,6 +84,5 @@ io.on('connection', function(socket) {
   // Disconnects a player
   socket.on('disconnect', function() {
     console.log('Player ' + socket.id + ' has disconnected.');
-    --playerNum
   });
 })

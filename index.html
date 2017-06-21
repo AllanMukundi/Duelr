@@ -11,10 +11,27 @@
 <body>
   <div class="centre-v">
     <div class="home-box">
-      <img src="assets/Duelr.png" class="logo">
-      <button class="btn btn-create" id="btn-home">Create a game</button>
-      <button class="btn" id="btn-home">Join a game</button>
+      <img src="assets/Duelr.png" class="logo" id="test">
+      <div id="home">
+        <button class="btn btn-home btn-create" onclick="createGame()">Create a game</button>
+        <button class="btn btn-home">Join a game</button>
+      </div>
+      <div id="creatingGame" style="display: none">
+        <form class="chooseName" onSubmit="return showCode()">
+          <input id="nameBox" class="name-box" type="text" placeholder=" Display name" maxlength="12">
+          <button class="btn btn-home btn-enter" type="submit">Enter</button>
+        </form>
+        <button class="btn btn-home btn-back" onclick="home()">Back</button>
+      </div>
+      <div id="showCode" style="display: none">
+        <p class="code-help">Game Code:</p>
+        <div class="code-box"><p id="code"></p></div>
+        <button class="btn btn-home btn-back" onclick="home()">Back</button>
+      </div>
     </div>
   </div>
+  <script src="socket.io-2.0.3.js"></script>
+  <script>var socket = io();</script>
+  <script src="home.js"></script>
 </body>
 </html>
