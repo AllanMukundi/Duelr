@@ -95,7 +95,10 @@ body {
 }
 
 .home-box {
-  border: 1px solid red;
+	background-color: rgba(230, 230, 230, 0.1);
+  -webkit-box-shadow: 1px -2px 18px -2px rgba(0,0,0,0.9);
+  -moz-box-shadow: 1px -2px 18px -2px rgba(0,0,0,0.9);
+  box-shadow: 1px -2px 18px -2px rgba(0,0,0,0.9);
   text-align: center;
   margin-left: auto;
   margin-right: auto;
@@ -139,6 +142,11 @@ button::-moz-focus-inner {
   width: 450px;
 }
 
+.logo {
+	margin-top: 90px;
+}
+
 .btn-create {
+	margin-top: 60px;
   margin-bottom: 25px;
 }
