@@ -12,21 +12,34 @@
   <div class="centre-v">
     <div class="home-box">
       <img src="assets/Duelr.png" class="logo" id="test">
+      <!-- Main Screen -->
       <div id="home">
         <button class="btn btn-home btn-create" onclick="createGame()">Create a game</button>
-        <button class="btn btn-home">Join a game</button>
+        <button class="btn btn-home" onclick="joinGame()">Join a game</button>
       </div>
+      <!-- Create game -->
       <div id="creatingGame" style="display: none">
         <form class="chooseName" onSubmit="return showCode()">
-          <input id="nameBox" class="name-box" type="text" placeholder=" Display name" maxlength="12">
+          <input id="createNameBox" class="field-box" type="text" placeholder=" Display name" maxlength="12">
           <button class="btn btn-home btn-enter" type="submit">Enter</button>
         </form>
-        <button class="btn btn-home btn-back" onclick="home()">Back</button>
+          <button class="btn btn-home btn-back" onclick="home()">Back</button>
       </div>
+      <!-- Create game -> enter -->
       <div id="showCode" style="display: none">
         <p class="code-help">Game Code:</p>
-        <div class="code-box"><p id="code"></p></div>
+        <div class="field-box code-box"><p id="code"></p></div>
         <button class="btn btn-home btn-back" onclick="home()">Back</button>
+      </div>
+      <!-- Join game -->
+      <div id="joiningGame" style="display: none">
+        <form class="chooseName">
+          <input id="joinNameBox" class="field-box btn-name" type="text" placeholder=" Display name" maxlength="12">
+          <input id="codeBox" class="field-box" type="text" placeholder=" Game code" maxlength="5">
+          <br>
+          <button class="btn join-enter btn-enter" type="submit" onClick="return joinStart()">Enter</button>
+          <button class="btn join-back btn-back" onclick="home()">Back</button>
+        </form>
       </div>
     </div>
   </div>

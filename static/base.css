@@ -72,6 +72,10 @@ Universal
   font-family: "Racing Sans One", cursive;
 }
 
+input {
+	padding-left: 15px;
+}
+
 /*
 ==========================
 Home screen
@@ -133,8 +137,7 @@ button::-moz-focus-inner {
 }
 
 .btn-home,
-.name-box,
-.code-box {
+.field-box {
   font-size: 3.5rem;
   height: 80px;
   width: 450px;
@@ -146,14 +149,12 @@ button::-moz-focus-inner {
 
 .btn-enter,
 .btn-create,
-.name-box,
-.code-box {
+.field-box {
 	margin-bottom: 25px;
 }
 
 .btn-create,
-.name-box,
-.code-box {
+.btn-name {
 	margin-top: 30px;
 }
 
@@ -174,4 +175,11 @@ button::-moz-focus-inner {
 .code-help {
 	color: #fff;
 	font-size: 2rem;
+}
+
+.join-enter,
+.join-back {
+  font-size: 3.5rem;
+  height: 80px;
+  width: 225px;
 }

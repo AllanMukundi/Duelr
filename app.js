@@ -58,23 +58,25 @@ io.on('connection', function(socket) {
     var game = new Game(gameCode);
     socket.player = player;
     game.setPlayerOne(player);
-    Manager.games[gameCode] = gameCode;
+    Manager.addGame(gameCode, game);
     socket.emit('createGameCode', {gameCode: gameCode})
   });
 
   // Player Two joins a game
   socket.on('joinGame', function(data) {
-    var gameCode = Manager[data.gameCode];
-    if (gameCode == null) {
-      socket.emit('gameJoin', {game: null});
-      console.log('Invalid game code.');
+    var game = Manager.games[data.gameCode];
+    if (game == null) {
+      socket.emit('startGame', {game: null});
+    } else if (game.playerTwo != undefined) {
+      socket.emit('startGame', {game: 'full'});
     } else {
-      var player = new Player(gameCode, data.name, socket.id, socket, 'Right');
+      console.log(game.playerRight);
+      var player = new Player(data.gameCode, data.name, socket.id, socket, 'Right');
       game.setPlayerTwo(player);
       socket.player = player;
-      socket.emit('gameJoin', {game: 'valid'});
-      var opponent = Game.playerOne.socket;
-      opponent.emit('gameJoin', {game: 'valid'});
+      socket.emit('startGame', {game: 'valid'});
+      var opponent = game.playerOne.socket;
+      opponent.emit('startGame', {game: 'valid'});
     }
   });
 

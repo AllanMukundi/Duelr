@@ -7,8 +7,8 @@ class Manager {
     this.running = true;
   };
 
-  addGame(game) {
-    this.games.push(game);
+  addGame(gameCode, game) {
+    this.games[gameCode] = game;
   }
 
   gameExists(gameCode) {
