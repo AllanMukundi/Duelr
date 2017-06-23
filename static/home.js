@@ -48,6 +48,6 @@ socket.on('startGame', function(data) {
     alert('This game is already underway.');
     return false;
   } else {
-    start(data.side);
+    start(data.side, data.nameP1, data.nameP2);
   }
 });
