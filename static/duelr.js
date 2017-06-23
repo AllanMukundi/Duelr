@@ -81,7 +81,7 @@ function setup() {
   });
   var playerOneName = new PIXI.Text(playerOneNameHUD, style);
   var playerTwoName = new PIXI.Text(playerTwoNameHUD, style);
-  // Find the appropriate length to offset Player TWo's name by----------------
+  // Find the appropriate width to offset Player Two's name by-----------------
   var canvas = document.createElement('canvas');
   var canvasP2 = canvas.getContext('2d');
   canvasP2.font = '48px Racing Sans One';
