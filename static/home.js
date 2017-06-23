@@ -35,7 +35,7 @@ function joinGame() {
 
 function joinStart() {
   var name = document.getElementById('joinNameBox').value;
-  var gameCode = document.getElementById('codeBox').value;
+  var gameCode = document.getElementById('codeBox').value.toUpperCase();
   socket.emit('joinGame', {name: name, gameCode: gameCode});
   return false;
 }
@@ -48,6 +48,6 @@ socket.on('startGame', function(data) {
     alert('This game is already underway.');
     return false;
   } else {
-  console.log('Creating game.');
+    start(data.side);
   }
 });

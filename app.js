@@ -44,7 +44,6 @@ function newGameCode() {
   while (Manager.gameExists(code)) {
     code = newGameCode();
   }
-  console.log("Game code: " + code);
   return code;
 }
 // Player connection
@@ -54,7 +53,7 @@ io.on('connection', function(socket) {
   // Player One creates a new game
   socket.on('createGame', function(data) {
     var gameCode = newGameCode();
-    var player = new Player(gameCode, data.name, socket.id, socket, 'Left');
+    var player = new Player(gameCode, data.name, socket.id, socket, 'left');
     var game = new Game(gameCode);
     socket.player = player;
     game.setPlayerOne(player);
@@ -70,13 +69,12 @@ io.on('connection', function(socket) {
     } else if (game.playerTwo != undefined) {
       socket.emit('startGame', {game: 'full'});
     } else {
-      console.log(game.playerRight);
-      var player = new Player(data.gameCode, data.name, socket.id, socket, 'Right');
+      var player = new Player(data.gameCode, data.name, socket.id, socket, 'right');
       game.setPlayerTwo(player);
       socket.player = player;
-      socket.emit('startGame', {game: 'valid'});
-      var opponent = game.playerOne.socket;
-      opponent.emit('startGame', {game: 'valid'});
+      socket.emit('startGame', {game: 'valid', side: player.side});
+      var opponent = game.playerOne;
+      opponent.socket.emit('startGame', {game: 'valid', side: opponent.side});
     }
   });
 
