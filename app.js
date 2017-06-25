@@ -73,7 +73,7 @@ io.on('connection', function(socket) {
       game.setPlayerTwo(player);
       socket.player = player;
       var opponent = game.playerOne;
-      socket.emit('startGame', {game: 'valid', side: player.side, nameP1: opponent.name, nameP2: data.name});
+      socket.emit('startGame', {game: 'valid', player: player.side, nameP1: opponent.name, nameP2: data.name});
       opponent.socket.emit('startGame', {game: 'valid', side: opponent.side, nameP1: opponent.name, nameP2: data.name});
     }
   });
