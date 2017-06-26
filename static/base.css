@@ -76,6 +76,11 @@ input {
 	padding-left: 15px;
 }
 
+canvas {
+	margin-left: auto;
+	margin-right: auto;
+}
+
 /*
 ==========================
 Home screen

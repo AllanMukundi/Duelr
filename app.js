@@ -87,13 +87,17 @@ io.on('connection', function(socket) {
 
   socket.on('direct', function(data) {
     var amount;
+    var direction = 'x';
     if (data.direction == 'left') {
-      amount = -2;
+      amount = -400;
+    } else if (data.direction == 'right') {
+      amount = 400;
     } else {
-      amount = 2;
+      amount = -300;
+      direction = 'y'
     }
-    game.playerOne.socket.emit('move', {direction: 'x', amount: amount, side: data.side});
-    game.playerTwo.socket.emit('move', {direction: 'x', amount: amount, side: data.side});
+    game.playerOne.socket.emit('move', {direction: direction, amount: amount, side: data.side});
+    game.playerTwo.socket.emit('move', {direction: direction, amount: amount, side: data.side});
   });
 
   // Disconnects a player
