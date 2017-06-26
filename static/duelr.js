@@ -3,8 +3,8 @@
 var gameCode;
 var game;
 var Game = {};
-var width = window.innerWidth;
-var height = window.innerHeight;
+var width = 1024;
+var height = 1024;
 var unit = 64;
 var player;
 var opponent;
@@ -29,13 +29,13 @@ Game.preload = function () {
   game.load.image('background', 'assets/water.png');
   game.load.image('topTile', 'assets/planet.png');
   game.load.image('bottomTile', 'assets/planetCenter.png');
-  game.load.image('playerOne', 'assets/alienGreen_front.png');
-  game.load.image('playerTwo', 'assets/alienPink_front.png');
   game.load.image('playerOneHUD', 'assets/hudPlayer_green.png');
   game.load.image('playerTwoHUD', 'assets/hudPlayer_pink.png')
+  game.load.spritesheet('players', 'assets/spritesheet_players.png', 128, 256);
 }
 
 Game.create = function() {
+  game.physics.startSystem(Phaser.Physics.ARCADE);
   // Background/Ground
   var tiles = new Array();
   for(var times = 1; times <= Math.ceil(height / unit); ++times) {
@@ -62,19 +62,42 @@ Game.create = function() {
   playerTwoHUD.y = height / unit;
   // Players
   if (playerSide == 'left') {
-    player = game.add.sprite(unit, height - (6 * unit), 'playerOne');
-    opponent = game.add.sprite(width - (3 * unit), height - (6 * unit), 'playerTwo');
-    player.x = unit;
-    player.y = height - (6 * unit);
+    player = game.add.sprite(unit, height - (6.75 * unit), 'players');
+    player.frame = 5;
+    opponent = game.add.sprite(width - (3 * unit), height - (6.75 * unit), 'players');
+    opponent.frame = 43;
   } else {
-    player = game.add.sprite(0, 0, 'playerTwo');
-    opponent = game.add.sprite(unit, height - (6 * unit), 'playerOne');
-    player.x = width - (3 * unit);
-    player.y = height - (6 * unit);
+    player = game.add.sprite(width - (3 * unit), height - (6.75 * unit), 'players');
+    player.frame = 43;
+    opponent = game.add.sprite(unit, height - (6.75 * unit), 'players');
+    opponent.frame = 5;
   }
   player.width /= charWidth;
   player.height /= charHeight;
   opponent.width /= charWidth;
   opponent.height /= charHeight;
-  socket.emit('attach', {gameCode: gameCode, side: playerSide, playerX: player.x, playerY: player.y});
+  game.physics.arcade.enable(player);
+  game.physics.arcade.enable(opponent);
+  socket.emit('attach', {gameCode: gameCode});
+  }
+
+Game.update = function() {
+  var cursors = game.input.keyboard.createCursorKeys();
+  player.body.velocity.x = 0;
+  opponent.body.velocity.x = 0;
+  if (cursors.left.isDown) {
+    socket.emit('direct', {direction: 'left', side: playerSide});
+  } else if (cursors.right.isDown) {
+    socket.emit('direct', {direction: 'right', side: playerSide});
+  } else if (cursors.up.isDown && player.body.touching.down) {
+    player.body.velocity.y = -350;
+  }
+
+  socket.on('move', function(data) {
+    if (data.side == playerSide) {
+      player.body.velocity[data.direction] += data.amount;
+    } else {
+      opponent.body.velocity[data.direction] += data.amount;
+    }
+  });
 }

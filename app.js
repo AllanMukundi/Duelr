@@ -48,6 +48,7 @@ function newGameCode() {
 }
 // Player connection
 io.on('connection', function(socket) {
+  var game;
   socket.id = playerNum++;
 
   // Player One creates a new game
@@ -81,14 +82,18 @@ io.on('connection', function(socket) {
   console.log('Player ' + socket.id + ' has connected.');
 
   socket.on('attach', function(data) {
-    var game = Manager.games[data.gameCode];
-    if (data.side == 'left') {
-      game.playerOne.x = data.playerX;
-      game.playerOne.y = data.playerY;
+    game = Manager.games[data.gameCode];
+  });
+
+  socket.on('direct', function(data) {
+    var amount;
+    if (data.direction == 'left') {
+      amount = -2;
     } else {
-      game.playerTwo.x = data.playerX;
-      game.playerTwo.y = data.playerY;
+      amount = 2;
     }
+    game.playerOne.socket.emit('move', {direction: 'x', amount: amount, side: data.side});
+    game.playerTwo.socket.emit('move', {direction: 'x', amount: amount, side: data.side});
   });
 
   // Disconnects a player
