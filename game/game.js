@@ -2,7 +2,6 @@
 
 class Game {
   constructor(gameCode) {
-    console.log("Game created.");
     this.gameCode = gameCode;
     this.running = true;
   }

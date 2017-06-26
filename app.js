@@ -65,21 +65,31 @@ io.on('connection', function(socket) {
   socket.on('joinGame', function(data) {
     var game = Manager.games[data.gameCode];
     if (game == null) {
-      socket.emit('startGame', {game: null});
+      socket.emit('startGame', {status: null});
     } else if (game.playerTwo != undefined) {
-      socket.emit('startGame', {game: 'full'});
+      socket.emit('startGame', {status: 'full'});
     } else {
       var player = new Player(data.gameCode, data.name, socket.id, socket, 'right');
       game.setPlayerTwo(player);
       socket.player = player;
       var opponent = game.playerOne;
-      socket.emit('startGame', {game: 'valid', player: player.side, nameP1: opponent.name, nameP2: data.name});
-      opponent.socket.emit('startGame', {game: 'valid', side: opponent.side, nameP1: opponent.name, nameP2: data.name});
+      socket.emit('startGame', {gameCode: data.gameCode, status: 'valid', side: 'right'});
+      opponent.socket.emit('startGame', {gameCode: data.gameCode, status: 'valid', side: 'left'});
     }
   });
 
-  socket.emit('playerid', { id: socket.id });
   console.log('Player ' + socket.id + ' has connected.');
+
+  socket.on('attach', function(data) {
+    var game = Manager.games[data.gameCode];
+    if (data.side == 'left') {
+      game.playerOne.x = data.playerX;
+      game.playerOne.y = data.playerY;
+    } else {
+      game.playerTwo.x = data.playerX;
+      game.playerTwo.y = data.playerY;
+    }
+  });
 
   // Disconnects a player
   socket.on('disconnect', function() {

@@ -12,7 +12,6 @@ class Player {
     this.health = CONST.PLAYER_HEALTH;
     this.dmg = CONST.PLAYER_DMG;
     this.alive = true;
-    console.log("Player created.");
   }
 }
 

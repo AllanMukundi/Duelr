@@ -41,13 +41,13 @@ function joinStart() {
 }
 
 socket.on('startGame', function(data) {
-  if (data.game == null) {
+  if (data.status == null) {
     alert('No game exists with that game code.');
     return false;
-  } else if (data.game == 'full') {
+  } else if (data.status == 'full') {
     alert('This game is already underway.');
     return false;
   } else {
-    start(data.side, data.nameP1, data.nameP2);
+    start(data.gameCode, data.side);
   }
 });
