@@ -3,19 +3,23 @@
 var gameCode;
 var game;
 var Game = {};
-var width = 1024;
-var height = window.innerHeight;
-var unit = 64;
 var floor;
 var player;
 var opponent;
 var playerSide;
+var leftName;
+var rightName;
+var width = 1024;
+var height = window.innerHeight;
+var unit = 64;
 var charWidth = 1.5;
 var charHeight = 1.45;
 
-function start(code, side) {
+function start(code, side, nameP1, nameP2) {
   gameCode = code;
   playerSide = side;
+  leftName = nameP1;
+  rightName = nameP2;
   // Setup canvas
   var bodyRef = document.body;
   bodyRef.innerHTML = '';
@@ -38,51 +42,12 @@ Game.preload = function () {
 Game.create = function() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
   // Background/Ground
-  floor = game.add.group();
-  floor.enableBody = true;
-  for(var times = 1; times <= Math.ceil(height / unit); ++times) {
-    for(var i = 0; i < Math.ceil(width / unit); ++i) {
-      if (times <= 3) {
-        game.add.sprite(i * unit, height - (times * unit), 'bottomTile');
-      } else if (times == 4) {
-        var tile = floor.create(i * unit, height - (times * unit), 'topTile');
-        tile.body.immovable = true;
-      } else {
-        game.add.sprite(i * unit, height - (times * unit), 'background');
-      }
-    }
-  }
+  createGround();
   // HUD
-  var playerOneHUD = game.add.sprite(unit, (height / unit), 'playerOneHUD');
-  var playerTwoHUD = game.add.sprite(width - (3 * unit), (height / unit), 'playerTwoHUD');
+  createHUD();
   // Players
-  if (playerSide == 'left') {
-    player = game.add.sprite(unit, height - (6.75 * unit), 'players');
-    player.frame = 5;
-    player.animations.add('right', [20, 36, 52, 68], 10);
-    player.animations.add('left', [27, 43, 59, 75], 10);
-    player.animations.add('up', [100])
-    opponent = game.add.sprite(width - (3 * unit), height - (6.75 * unit), 'players');
-    opponent.frame = 83;
-    opponent.animations.add('right', [98, 114, 3, 19], 10);
-    opponent.animations.add('left', [109, 125, 12, 28], 10);
-    opponent.animations.add('up', [105]);
-  } else {
-    player = game.add.sprite(width - (3 * unit), height - (6.75 * unit), 'players');
-    player.frame = 83;
-    player.animations.add('right', [98, 114, 3, 19], 10)
-    player.animations.add('left', [109, 125, 12, 28], 10);
-    player.animations.add('up', [105]);
-    opponent = game.add.sprite(unit, height - (6.75 * unit), 'players');
-    opponent.frame = 5;
-    opponent.animations.add('right', [20, 36, 52, 68], 10);
-    opponent.animations.add('left', [27, 43, 59, 75], 10);
-    opponent.animations.add('up', [100])
-  }
-  player.width /= charWidth;
-  player.height /= charHeight;
-  opponent.width /= charWidth;
-  opponent.height /= charHeight;
+  createPlayers();
+  // Physics settings
   game.physics.arcade.enable(player);
   game.physics.arcade.enable(opponent);
   player.body.collideWorldBounds = true;
@@ -125,4 +90,61 @@ Game.update = function() {
       opponent.animations.play(direction, true)
     }
   });
+}
+
+function createGround() {
+floor = game.add.group();
+  floor.enableBody = true;
+  for(var times = 1; times <= Math.ceil(height / unit); ++times) {
+    for(var i = 0; i < Math.ceil(width / unit); ++i) {
+      if (times <= 3) {
+        game.add.sprite(i * unit, height - (times * unit), 'bottomTile');
+      } else if (times == 4) {
+        var tile = floor.create(i * unit, height - (times * unit), 'topTile');
+        tile.body.immovable = true;
+      } else {
+        game.add.sprite(i * unit, height - (times * unit), 'background');
+      }
+    }
+  }
+}
+
+function createHUD() {
+  game.add.sprite(unit, (height / unit), 'playerOneHUD');
+  game.add.sprite(width - (3 * unit), (height / unit), 'playerTwoHUD');
+  var style = {font: '32px Racing Sans One', fill: ['#232526', '#414345'], stroke: '#ffffff'};
+  // Find the appropriate width to offset Player Two's name by------------------
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+  context.font = '32px Racing Sans One';
+  var tempWidth = context.measureText(rightName).width;
+  //----------------------------------------------------------------------------
+  leftName = game.add.text((3 * unit), (height / unit) + (unit / 2), leftName, style);
+  rightName = game.add.text(width - (3 * unit) - tempWidth, (height / unit) + (unit / 2), rightName, style);
+}
+
+function createPlayers() {
+  if (playerSide == 'left') {
+    player = game.add.sprite(unit, height - (6.75 * unit), 'players');
+    player.frame = 5;
+    player.animations.add('right', [20, 36, 52, 68], 10);
+    player.animations.add('left', [27, 43, 59, 75], 10);
+    opponent = game.add.sprite(width - (3 * unit), height - (6.75 * unit), 'players');
+    opponent.frame = 83;
+    opponent.animations.add('right', [98, 114, 3, 19], 10);
+    opponent.animations.add('left', [109, 125, 12, 28], 10);
+  } else {
+    player = game.add.sprite(width - (3 * unit), height - (6.75 * unit), 'players');
+    player.frame = 83;
+    player.animations.add('right', [98, 114, 3, 19], 10)
+    player.animations.add('left', [109, 125, 12, 28], 10);
+    opponent = game.add.sprite(unit, height - (6.75 * unit), 'players');
+    opponent.frame = 5;
+    opponent.animations.add('right', [20, 36, 52, 68], 10);
+    opponent.animations.add('left', [27, 43, 59, 75], 10);
+  }
+  player.width /= charWidth;
+  player.height /= charHeight;
+  opponent.width /= charWidth;
+  opponent.height /= charHeight;
 }

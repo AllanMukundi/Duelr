@@ -47,6 +47,7 @@ function newGameCode() {
   }
   return code;
 }
+
 // Player connection
 io.on('connection', function(socket) {
   var game;
@@ -75,8 +76,8 @@ io.on('connection', function(socket) {
       game.setPlayerTwo(player);
       socket.player = player;
       var opponent = game.playerOne;
-      socket.emit('startGame', {gameCode: data.gameCode, status: 'valid', side: 'right'});
-      opponent.socket.emit('startGame', {gameCode: data.gameCode, status: 'valid', side: 'left'});
+      socket.emit('startGame', {gameCode: data.gameCode, status: 'valid', side: 'right', nameP1: opponent.name, nameP2: player.name});
+      opponent.socket.emit('startGame', {gameCode: data.gameCode, status: 'valid', side: 'left', nameP1: opponent.name, nameP2: player.name});
     }
   });
 
