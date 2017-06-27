@@ -13,6 +13,7 @@ var Game        =       require('./game/game.js');
 var Player      =       require('./game/player.js');
 var Manager     =       new gameManager();
 var playerNum   =       0
+var movement    =       400
 
 // Start the server
 server.listen(port);
@@ -89,11 +90,11 @@ io.on('connection', function(socket) {
     var amount;
     var direction = 'x';
     if (data.direction == 'left') {
-      amount = -400;
+      amount = -movement;
     } else if (data.direction == 'right') {
-      amount = 400;
+      amount = movement;
     } else {
-      amount = -300;
+      amount = -(movement * 0.75);
       direction = 'y'
     }
     game.playerOne.socket.emit('move', {direction: direction, amount: amount, side: data.side});

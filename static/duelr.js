@@ -31,8 +31,8 @@ Game.preload = function () {
   game.load.image('topTile', 'assets/planet.png');
   game.load.image('bottomTile', 'assets/planetCentre.png');
   game.load.image('playerOneHUD', 'assets/hudPlayer_green.png');
-  game.load.image('playerTwoHUD', 'assets/hudPlayer_beige.png')
-  game.load.spritesheet('players', 'assets/spritesheet_players.png', 128, 256);
+  game.load.image('playerTwoHUD', 'assets/hudPlayer_pink.png');
+  game.load.spritesheet('players', 'assets/sprites.png', 128, 256);
 }
 
 Game.create = function() {
@@ -59,25 +59,25 @@ Game.create = function() {
   if (playerSide == 'left') {
     player = game.add.sprite(unit, height - (6.75 * unit), 'players');
     player.frame = 5;
-    player.animations.add('right', [12, 20, 28, 36], 20);
-    player.animations.add('left', [36, 28, 20, 12], 20);
-    player.animations.add('up', [52])
+    player.animations.add('right', [20, 36, 52, 68], 10);
+    player.animations.add('left', [27, 43, 59, 75], 10);
+    player.animations.add('up', [100])
     opponent = game.add.sprite(width - (3 * unit), height - (6.75 * unit), 'players');
-    opponent.frame = 56;
-    opponent.animations.add('right', [0, 8, 16, 24], 20);
-    opponent.animations.add('left', [24, 16, 8, 0], 20);
-    opponent.animations.add('up', [40]);
+    opponent.frame = 83;
+    opponent.animations.add('right', [98, 114, 3, 19], 10);
+    opponent.animations.add('left', [109, 125, 12, 28], 10);
+    opponent.animations.add('up', [105]);
   } else {
     player = game.add.sprite(width - (3 * unit), height - (6.75 * unit), 'players');
-    player.frame = 56;
-    player.animations.add('right', [0, 8, 16, 24], 20)
-    player.animations.add('left', [24, 16, 8, 0], 20);
-    player.animations.add('up', [40]);
+    player.frame = 83;
+    player.animations.add('right', [98, 114, 3, 19], 10)
+    player.animations.add('left', [109, 125, 12, 28], 10);
+    player.animations.add('up', [105]);
     opponent = game.add.sprite(unit, height - (6.75 * unit), 'players');
     opponent.frame = 5;
-    opponent.animations.add('right', [12, 20, 28, 36], 20);
-    opponent.animations.add('left', [36, 28, 20, 12], 20);
-    opponent.animations.add('up', [52])
+    opponent.animations.add('right', [20, 36, 52, 68], 10);
+    opponent.animations.add('left', [27, 43, 59, 75], 10);
+    opponent.animations.add('up', [100])
   }
   player.width /= charWidth;
   player.height /= charHeight;
@@ -87,8 +87,8 @@ Game.create = function() {
   game.physics.arcade.enable(opponent);
   player.body.collideWorldBounds = true;
   opponent.body.collideWorldBounds = true;
-  player.body.gravity.y = 750;
-  opponent.body.gravity.y = 750;
+  player.body.gravity.y = 500;
+  opponent.body.gravity.y = 500;
   socket.emit('attach', {gameCode: gameCode});
   }
 
@@ -100,9 +100,11 @@ Game.update = function() {
   var cursors = game.input.keyboard.createCursorKeys();
   if (cursors.left.isDown) {
     socket.emit('direct', {direction: 'left', side: playerSide});
-  } else if (cursors.right.isDown) {
+  }
+  if (cursors.right.isDown) {
     socket.emit('direct', {direction: 'right', side: playerSide});
-  } else if (cursors.up.isDown && player.body.touching.down) {
+  }
+  if (cursors.up.isDown && player.body.touching.down) {
     socket.emit('direct', {direction: 'up', side: playerSide});
   }
 
@@ -117,10 +119,10 @@ Game.update = function() {
     // ------------------------------------------------------------------------
     if (data.side == playerSide) {
       player.body.velocity[data.direction] = data.amount;
-      player.animations.play(direction)
+      player.animations.play(direction, true)
     } else {
       opponent.body.velocity[data.direction] = data.amount;
-      opponent.animations.play(direction)
+      opponent.animations.play(direction, true)
     }
   });
 }
