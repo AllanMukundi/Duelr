@@ -188,3 +188,7 @@ button::-moz-focus-inner {
   height: 80px;
   width: 225px;
 }
+
+.grey {
+	-webkit-filter:grayscale(100%);
+}
