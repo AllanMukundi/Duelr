@@ -102,6 +102,11 @@ io.on('connection', function(socket) {
     game.playerTwo.socket.emit('move', {direction: direction, amount: amount, side: data.side});
   });
 
+  socket.on('aim', function(data) {
+    game.playerOne.socket.emit('fire', {side: data.side});
+    game.playerTwo.socket.emit('fire', {side: data.side});
+  })
+
   // Disconnects a player
   socket.on('disconnect', function() {
     console.log('Player ' + socket.id + ' has disconnected.');

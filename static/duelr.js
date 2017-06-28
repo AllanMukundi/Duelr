@@ -9,6 +9,8 @@ var opponent;
 var playerSide;
 var leftName;
 var rightName;
+var bullets;
+var bulletDirection;
 var width = 1024;
 var height = window.innerHeight;
 var unit = 64;
@@ -36,6 +38,7 @@ Game.preload = function () {
   game.load.image('bottomTile', 'assets/planetCentre.png');
   game.load.image('playerOneHUD', 'assets/hudPlayer_green.png');
   game.load.image('playerTwoHUD', 'assets/hudPlayer_pink.png');
+  game.load.image('bullet', 'assets/bullet.png');
   game.load.spritesheet('players', 'assets/sprites.png', 128, 256);
 }
 
@@ -47,6 +50,8 @@ Game.create = function() {
   createHUD();
   // Players
   createPlayers();
+  // Bullets
+  createAmmo();
   // Physics settings
   game.physics.arcade.enable(player);
   game.physics.arcade.enable(opponent);
@@ -63,6 +68,8 @@ Game.update = function() {
   player.body.velocity.x = 0;
   opponent.body.velocity.x = 0;
   var cursors = game.input.keyboard.createCursorKeys();
+  var shoot = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  shoot.onDown.add(shootBullet, this);
   if (cursors.left.isDown) {
     socket.emit('direct', {direction: 'left', side: playerSide});
   }
@@ -76,8 +83,10 @@ Game.update = function() {
   socket.on('move', function(data) {
     if (data.direction == 'x' && data.amount >= 0) {
       var direction = 'right';
+      bulletDirection = 500;
     } else if (data.direction == 'x' && data.amount < 0){
       var direction = 'left';
+      bulletDirection = -500;
     } else {
       var direction = 'up';
     }
@@ -133,6 +142,7 @@ function createPlayers() {
     opponent.frame = 83;
     opponent.animations.add('right', [98, 114, 3, 19], 10);
     opponent.animations.add('left', [109, 125, 12, 28], 10);
+    bulletDirection = 500;
   } else {
     player = game.add.sprite(width - (3 * unit), height - (6.75 * unit), 'players');
     player.frame = 83;
@@ -142,9 +152,51 @@ function createPlayers() {
     opponent.frame = 5;
     opponent.animations.add('right', [20, 36, 52, 68], 10);
     opponent.animations.add('left', [27, 43, 59, 75], 10);
+    bulletDirection = -500;
   }
   player.width /= charWidth;
   player.height /= charHeight;
   opponent.width /= charWidth;
   opponent.height /= charHeight;
 }
+
+function createAmmo() {
+  bullets = game.add.group();
+  bullets.enableBody = true;
+  bullets.createMultiple(3, 'bullet');
+  bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', reset);
+  bullets.callAll('anchor.setTo', 'anchor', 0.5, -0.5);
+  bullets.setAll('checkWorldBounds', true);
+}
+
+function reset(bullet) {
+  bullet.kill();
+}
+
+function playerShoot() {
+  var bullet = bullets.getFirstExists(false);
+  if (bullet) {
+    bullet.reset(player.x + 70, player.y + 105);
+    bullet.body.velocity.x = bulletDirection;
+  }
+}
+
+function opponentShoot() {
+  var bullet = bullets.getFirstExists(false);
+  if (bullet) {
+    bullet.reset(opponent.x + 70, opponent.y + 105);
+    bullet.body.velocity.x = bulletDirection;
+  }
+}
+
+function shootBullet() {
+  socket.emit('aim', {side: playerSide});
+}
+
+socket.on('fire', function(data) {
+  if (data.side == playerSide) {
+    playerShoot();
+  } else {
+    opponentShoot();
+  }
+})
