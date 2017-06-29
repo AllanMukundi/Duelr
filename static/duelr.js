@@ -56,6 +56,7 @@ Game.create = function() {
   createPlayers();
   // Bullets
   createAmmo();
+  // Socket.io
   socket.emit('attach', {gameCode: gameCode});
   }
 
@@ -109,7 +110,10 @@ Game.update = function() {
     }
   });
   if (player.health == 0 || opponent.health == 0) {
-    var gameOver = game.add.text(width / 2, height / 2, 'Game over.\nClick to restart!', {font: '100px Arial', align: 'center'});
+    var msg = 'Game over.\nClick to restart!';
+    var style = {font: '100px Arial', align: 'center'};
+    var gameOver = game.add.text((2.75 * unit), height / 2.5, msg, style);
+    game.input.keyboard.stop();
     document.body.className = 'grey';
     if (game.input.activePointer.isDown) {
       location.reload();
@@ -259,4 +263,4 @@ socket.on('fire', function(data) {
   } else {
     opponentShoot();
   }
-})
+});
