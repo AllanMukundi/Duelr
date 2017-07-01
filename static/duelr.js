@@ -196,6 +196,8 @@ function createPlayers() {
   // Physics settings
   game.physics.arcade.enable(player);
   game.physics.arcade.enable(opponent);
+  player.body.setSize(128, 156, 0, 100);
+  opponent.body.setSize(128, 156, 0, 100);
   player.body.collideWorldBounds = true;
   opponent.body.collideWorldBounds = true;
   player.body.gravity.y = 500;

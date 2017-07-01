@@ -84,7 +84,6 @@ io.on('connection', function(socket) {
 
   socket.on('attach', function(data) {
     game = Manager.games[data.gameCode];
-    console.log(game);
   });
 
   socket.on('direct', function(data) {
